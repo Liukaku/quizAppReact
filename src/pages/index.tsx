@@ -34,7 +34,7 @@ export default function Home() {
       <main className={styles.main}>
         <div>
           <button
-            className=" border-4 border-red-300 text-6xl"
+            className=" border-4 border-red-300"
             onClick={() => btnClick()}
           >
             Click Me
