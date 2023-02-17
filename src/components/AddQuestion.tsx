@@ -1,6 +1,24 @@
 import React from "react";
+import { Question } from "./types";
 
-const AddQuestion = () => {
+type Props = {
+  SaveQuestion: Function;
+};
+
+const AddQuestion = ({ SaveQuestion }: Props) => {
+  const updateQuestion = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+    const question: Question = {
+      questionTitle: "",
+      order: 0,
+      type: "MULTI-CHOICE",
+      answer: [""],
+    };
+    SaveQuestion();
+  };
+
   return (
     <form className="flex flex-wrap">
       <input
@@ -8,21 +26,44 @@ const AddQuestion = () => {
         type="text"
         id="questionTitle"
         placeholder="Enter your question here..."
+        required
       />
-      <div className="w-3/12 mx-auto">
+      <div className="lg:w-3/12 w-1/2 mx-auto my-2">
         <div>
-          <input type={"radio"} id="single" value={"Single Choice"}></input>
+          <input
+            type={"radio"}
+            id="single"
+            name="questionType"
+            value={"Single Choice"}
+          ></input>
           <label htmlFor="single">Single Choice</label>
         </div>
         <div>
-          <input type={"radio"} id="multi" value={"Multiple Choice"}></input>
+          <input
+            type={"radio"}
+            id="multi"
+            name="questionType"
+            value={"Multiple Choice"}
+          ></input>
           <label htmlFor="multi">Multiple Choice</label>
         </div>
         <div>
-          <input type={"radio"} id="reorder" value={"Re-order"}></input>
+          <input
+            type={"radio"}
+            id="reorder"
+            name="questionType"
+            value={"Re-order"}
+          ></input>
           <label htmlFor="reorder">Re-Order</label>
         </div>
       </div>
+      <button
+        className="formButton"
+        type="submit"
+        onClick={(e) => updateQuestion(e)}
+      >
+        Save Question
+      </button>
     </form>
   );
 };
