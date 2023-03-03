@@ -16,10 +16,12 @@ export type SectionVal = {
 
 export type Questions = Array<Question>;
 
+export type QuestionType = "SINGLE-CHOICE" | "MULTI-CHOICE" | "ORDER";
+
 export type Question = {
   questionTitle: string;
   order: number;
-  type: "SINGLE-CHOICE" | "MULTI-CHOICE" | "ORDER";
+  type: QuestionType;
   answer: Array<string>;
 };
 

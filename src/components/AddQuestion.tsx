@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { Question } from "./types";
+import { Question, QuestionType } from "./types";
+import AddAnswerSection from "./AddAnswerSection";
 
 type Props = {
   SaveQuestion: Function;
 };
-
-type QuestionType = "SINGLE-CHOICE" | "MULTI-CHOICE" | "ORDER";
 
 const AddQuestion = ({ SaveQuestion }: Props) => {
   const [questionTitle, updateTitle] = useState<string>("");
@@ -81,6 +80,7 @@ const AddQuestion = ({ SaveQuestion }: Props) => {
           <label htmlFor="reorder">Re-Order</label>
         </div>
       </div>
+      <AddAnswerSection type={questionType} updateAnswers={updateAnswer} />
       <button
         className="formButton"
         type="submit"
