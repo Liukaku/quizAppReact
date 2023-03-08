@@ -22,7 +22,14 @@ export type Question = {
   questionTitle: string;
   order: number;
   type: QuestionType;
-  answer: Array<string>;
+  answer: Array<Answer>;
+};
+
+export type Answer = {
+  title: string;
+  order: number;
+  correct: boolean;
+  id: string;
 };
 
 export type EditMode = "SECTIONS" | "QUESTIONS";

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Question, QuestionType } from "./types";
+import React, { useEffect, useState } from "react";
+import { Answer, Question, QuestionType } from "./types";
 import AddAnswerSection from "./AddAnswerSection";
 
 type Props = {
@@ -10,7 +10,8 @@ const AddQuestion = ({ SaveQuestion }: Props) => {
   const [questionTitle, updateTitle] = useState<string>("");
   const [questionType, updateType] = useState<QuestionType | "">("");
   const [questionOrder, updateOrder] = useState<number>(0);
-  const [questionAnswer, updateAnswer] = useState<Array<string>>([""]);
+  const [questionAnswer, updateAnswer] = useState<Array<Answer>>([]);
+
   const updateQuestion = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
@@ -24,6 +25,19 @@ const AddQuestion = ({ SaveQuestion }: Props) => {
       };
       SaveQuestion(question);
     }
+  };
+
+  const updateSelectedAnswer = (n: number) => {
+    const selections = questionAnswer.map((answer, i) => {
+      if (answer.correct) {
+        answer.correct = false;
+      }
+      if (i === n) {
+        answer.correct = true;
+      }
+      return answer;
+    });
+    updateAnswer([...selections]);
   };
 
   return (
@@ -80,7 +94,33 @@ const AddQuestion = ({ SaveQuestion }: Props) => {
           <label htmlFor="reorder">Re-Order</label>
         </div>
       </div>
-      <AddAnswerSection type={questionType} updateAnswers={updateAnswer} />
+      <AddAnswerSection
+        type={questionType}
+        currentAnswers={questionAnswer}
+        updateAnswers={updateAnswer}
+      />
+      {questionAnswer.map((answer, n) => {
+        return (
+          <div key={answer.id} className="flex w-full">
+            <div>{answer.title}</div>
+            <div>{answer.order}</div>
+            <div>
+              <label htmlFor={`${answer.id}-${new Date().getTime()}`}>
+                Correct Answer?
+              </label>
+              <input
+                type="radio"
+                name="singleChoice"
+                checked={answer.correct}
+                onChange={() => {
+                  updateSelectedAnswer(n);
+                }}
+                id={`${answer.id}`}
+              />
+            </div>
+          </div>
+        );
+      })}
       <button
         className="formButton"
         type="submit"

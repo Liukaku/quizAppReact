@@ -5,6 +5,7 @@ import styles from "@/styles/Home.module.css";
 import { useEffect } from "react";
 
 import io from "socket.io-client";
+import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
 const socket = io("http://localhost:8080", {
@@ -39,6 +40,7 @@ export default function Home() {
           >
             Click Me
           </button>
+          <Link href={"/setup"}>set up</Link>
         </div>
       </main>
     </>

@@ -1,25 +1,26 @@
-import React, { useEffect, useState } from "react";
-
-type Answer = {
-  title: string;
-  order: number;
-  correct: boolean;
-  id: string;
-};
+import React, { useEffect, useRef, useState } from "react";
+import { Answer } from "../types";
 
 type Props = {
+  currentAnswers: Array<Answer>;
   sendAnswersToParent: Function;
 };
 
-const SingleChoice = ({ sendAnswersToParent }: Props) => {
-  const [answers, updateAnswers] = useState<Array<Answer>>([]);
+const SingleChoice = ({ currentAnswers, sendAnswersToParent }: Props) => {
+  const [answers, updateAnswers] = useState<Array<Answer>>(currentAnswers);
   const [answerTitle, updateTitle] = useState("");
-  const [answerSelection, updationSelection] = useState(0);
+  const correctSelectedRef = useRef<HTMLInputElement>(null);
+  const [answerSelection, updateSelection] = useState(0);
 
   useEffect(() => {
     sendAnswersToParent(answers);
     return () => {};
   }, [answers]);
+
+  useEffect(() => {
+    updateAnswers(currentAnswers);
+    return () => {};
+  }, [currentAnswers]);
 
   const addOption = (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -27,11 +28,20 @@ const SingleChoice = ({ sendAnswersToParent }: Props) => {
     const answer = {
       title: answerTitle,
       order: currentAnswers.length,
-      correct: answerSelection === currentAnswers.length,
+      correct: correctSelectedRef.current?.checked ? true : false,
       id: `${answerTitle}-${new Date().getTime()}`,
     };
 
+    if (answer.correct) {
+      currentAnswers.forEach((oldAnswer, n) => {
+        if (oldAnswer.correct) {
+          currentAnswers[n].correct = false;
+        }
+      });
+    }
+
     currentAnswers.push(answer);
+    updateAnswers([...currentAnswers]);
   };
   return (
     <div className=" w-full">
@@ -53,6 +63,7 @@ const SingleChoice = ({ sendAnswersToParent }: Props) => {
           <input
             type="radio"
             name="singleChoice"
+            ref={correctSelectedRef}
             id={`${answerTitle}-${new Date().getTime()}`}
           />
         </div>
