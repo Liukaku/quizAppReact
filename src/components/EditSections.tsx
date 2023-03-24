@@ -64,6 +64,9 @@ const EditSections = ({
     console.log(questionNum, answerNum);
     const currentQuestions = quiz;
     currentQuestions.Questions[questionNum].answer.splice(answerNum, 1);
+    currentQuestions.Questions[questionNum].answer.map((answer, i) => {
+      answer.order = i;
+    });
     updateQuiz({ ...currentQuestions });
   };
 
