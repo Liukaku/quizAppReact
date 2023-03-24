@@ -54,12 +54,26 @@ const EditSections = ({
     updateQuestionToEdit(question);
   };
 
+  const deleteQuestion = (question: Question) => {
+    const currentQuestions = quiz;
+    currentQuestions.Questions.splice(question.order, 1);
+    updateQuiz({ ...currentQuestions });
+  };
+
+  const deleteAnswer = (questionNum: number, answerNum: number) => {
+    console.log(questionNum, answerNum);
+    const currentQuestions = quiz;
+    currentQuestions.Questions[questionNum].answer.splice(answerNum, 1);
+    updateQuiz({ ...currentQuestions });
+  };
+
   return (
     <div className="lg:w-5/12 w-8/12 mx-auto">
       <h1 className="text-center">{sectionTitle}</h1>
       <AddQuestion
         SaveQuestion={saveQuestion}
         questionToEdit={questionToEdit}
+        deleteAnswer={deleteAnswer}
       />
       <div>
         {sectionQuestions.map((question: Question, n) => {

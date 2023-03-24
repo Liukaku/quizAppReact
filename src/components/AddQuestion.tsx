@@ -5,9 +5,14 @@ import AddAnswerSection from "./AddAnswerSection";
 type Props = {
   SaveQuestion: Function;
   questionToEdit: Question | null;
+  deleteAnswer: DeleteAnswer;
 };
 
-const AddQuestion = ({ SaveQuestion, questionToEdit }: Props) => {
+interface DeleteAnswer {
+  (questionOrder: number, answerOrder: number): void;
+}
+
+const AddQuestion = ({ SaveQuestion, questionToEdit, deleteAnswer }: Props) => {
   const [questionTitle, updateTitle] = useState<string>("");
   const [questionType, updateType] = useState<QuestionType | "">("");
   const [questionOrder, updateOrder] = useState<number>(0);
@@ -53,6 +58,10 @@ const AddQuestion = ({ SaveQuestion, questionToEdit }: Props) => {
       return answer;
     });
     updateAnswer([...selections]);
+  };
+
+  const deleteSelectedAnswer = (n: number) => {
+    deleteAnswer(questionOrder, n);
   };
 
   return (
@@ -119,9 +128,7 @@ const AddQuestion = ({ SaveQuestion, questionToEdit }: Props) => {
           {questionAnswer.map((answer, n) => {
             return (
               <div key={answer.id} className="flex w-full justify-between">
-                <div contentEditable className="w-1/3">
-                  {answer.title}
-                </div>
+                <div className="w-1/3">{answer.title}</div>
                 <div>{answer.order}</div>
                 <div className="w-1/3 justify-around flex">
                   <label htmlFor={`${answer.id}-${new Date().getTime()}`}>
@@ -136,6 +143,14 @@ const AddQuestion = ({ SaveQuestion, questionToEdit }: Props) => {
                     }}
                     id={`${answer.id}`}
                   />
+                  <div
+                    className="text-red-600 font-black cursor-pointer hover:blur-sm duration-100 ease-in-out"
+                    onClick={(e) => {
+                      deleteSelectedAnswer(n);
+                    }}
+                  >
+                    X
+                  </div>
                 </div>
               </div>
             );
