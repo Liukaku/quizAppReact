@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 import AddQuestion from "./AddQuestion";
-import { CTX, Question, Questions, Quiz } from "./types";
+import { Answer, CTX, Question, Questions, Quiz } from "./types";
 import AddAnswerSection from "./AddAnswerSection";
 import ListQuestion from "./ListQuestion";
 
@@ -26,6 +26,9 @@ const EditSections = ({
   const [quiz, updateQuiz]: Array<Quiz & Dispatch<SetStateAction<Quiz>>> =
     useContext<any>(CTX);
   const [sectionQuestions, updateQuestions] = useState(quiz.Questions);
+  const [questionToEdit, updateQuestionToEdit] = useState<Question | null>(
+    null
+  );
 
   useEffect(() => {
     if (quiz.Questions.length !== sectionQuestions.length) {
@@ -36,20 +39,36 @@ const EditSections = ({
   const saveQuestion = (question: Question) => {
     const currentQuestions = quiz;
     const newQuestion = question;
-    console.log(currentQuestions);
-    newQuestion.order = currentQuestions.Questions.length;
-    console.log(newQuestion);
-    currentQuestions.Questions.push(newQuestion);
+    if (questionToEdit == null) {
+      newQuestion.order = currentQuestions.Questions.length;
+      currentQuestions.Questions.push(newQuestion);
+    } else {
+      newQuestion.order = questionToEdit.order;
+      currentQuestions.Questions[questionToEdit.order] = newQuestion;
+      updateQuestionToEdit(null);
+    }
     updateQuiz({ ...currentQuestions });
   };
 
+  const editQuestionAnswers = (question: Question) => {
+    updateQuestionToEdit(question);
+  };
+
   return (
-    <div className=" w-5/12 mx-auto">
+    <div className="lg:w-5/12 w-8/12 mx-auto">
       <h1 className="text-center">{sectionTitle}</h1>
-      <AddQuestion SaveQuestion={saveQuestion} />
+      <AddQuestion
+        SaveQuestion={saveQuestion}
+        questionToEdit={questionToEdit}
+      />
       <div>
         {sectionQuestions.map((question: Question, n) => {
-          return <ListQuestion question={question} />;
+          return (
+            <ListQuestion
+              question={question}
+              editQuestionAnswers={editQuestionAnswers}
+            />
+          );
         })}
       </div>
       <button className="formButton bg-red-800" onClick={() => updateMode()}>

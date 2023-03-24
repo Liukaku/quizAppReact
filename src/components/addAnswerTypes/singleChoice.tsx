@@ -42,6 +42,7 @@ const SingleChoice = ({ currentAnswers, sendAnswersToParent }: Props) => {
 
     currentAnswers.push(answer);
     updateAnswers([...currentAnswers]);
+    updateTitle("");
   };
   return (
     <div className=" w-full">

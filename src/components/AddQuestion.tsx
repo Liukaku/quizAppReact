@@ -4,13 +4,24 @@ import AddAnswerSection from "./AddAnswerSection";
 
 type Props = {
   SaveQuestion: Function;
+  questionToEdit: Question | null;
 };
 
-const AddQuestion = ({ SaveQuestion }: Props) => {
+const AddQuestion = ({ SaveQuestion, questionToEdit }: Props) => {
   const [questionTitle, updateTitle] = useState<string>("");
   const [questionType, updateType] = useState<QuestionType | "">("");
   const [questionOrder, updateOrder] = useState<number>(0);
   const [questionAnswer, updateAnswer] = useState<Array<Answer>>([]);
+
+  useEffect(() => {
+    console.log(questionToEdit);
+    if (questionToEdit !== null) {
+      updateTitle(questionToEdit.questionTitle);
+      updateType(questionToEdit.type);
+      updateOrder(questionToEdit.order);
+      updateAnswer(questionToEdit.answer);
+    }
+  }, [questionToEdit]);
 
   const updateQuestion = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -24,6 +35,10 @@ const AddQuestion = ({ SaveQuestion }: Props) => {
         answer: questionAnswer,
       };
       SaveQuestion(question);
+      updateAnswer([]);
+      updateTitle("");
+      updateType("");
+      updateOrder(0);
     }
   };
 
@@ -41,7 +56,7 @@ const AddQuestion = ({ SaveQuestion }: Props) => {
   };
 
   return (
-    <form className="flex flex-wrap">
+    <form className="flex flex-wrap w-full">
       <input
         className="w-full"
         type="text"
@@ -99,28 +114,34 @@ const AddQuestion = ({ SaveQuestion }: Props) => {
         currentAnswers={questionAnswer}
         updateAnswers={updateAnswer}
       />
-      {questionAnswer.map((answer, n) => {
-        return (
-          <div key={answer.id} className="flex w-full">
-            <div>{answer.title}</div>
-            <div>{answer.order}</div>
-            <div>
-              <label htmlFor={`${answer.id}-${new Date().getTime()}`}>
-                Correct Answer?
-              </label>
-              <input
-                type="radio"
-                name="singleChoice"
-                checked={answer.correct}
-                onChange={() => {
-                  updateSelectedAnswer(n);
-                }}
-                id={`${answer.id}`}
-              />
-            </div>
-          </div>
-        );
-      })}
+      {questionAnswer && (
+        <div className=" w-full">
+          {questionAnswer.map((answer, n) => {
+            return (
+              <div key={answer.id} className="flex w-full justify-between">
+                <div contentEditable className="w-1/3">
+                  {answer.title}
+                </div>
+                <div>{answer.order}</div>
+                <div className="w-1/3 justify-around flex">
+                  <label htmlFor={`${answer.id}-${new Date().getTime()}`}>
+                    Correct Answer?
+                  </label>
+                  <input
+                    type="radio"
+                    name="singleChoice"
+                    checked={answer.correct}
+                    onChange={() => {
+                      updateSelectedAnswer(n);
+                    }}
+                    id={`${answer.id}`}
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
       <button
         className="formButton"
         type="submit"
