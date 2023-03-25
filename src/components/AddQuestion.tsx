@@ -1,18 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { Answer, Question, QuestionType } from "./types";
 import AddAnswerSection from "./AddAnswerSection";
+import SingleAnswer from "./addAnswerTypes/listAnswers/SingleAnswer";
 
 type Props = {
   SaveQuestion: Function;
   questionToEdit: Question | null;
   deleteAnswer: DeleteAnswer;
+  updateAnswerOrder: UpdateAnswerOrder;
 };
 
 interface DeleteAnswer {
   (questionOrder: number, answerOrder: number): void;
 }
 
-const AddQuestion = ({ SaveQuestion, questionToEdit, deleteAnswer }: Props) => {
+interface UpdateAnswerOrder {
+  (questionOrder: number, answerOrder: number): void;
+}
+
+const AddQuestion = ({
+  SaveQuestion,
+  questionToEdit,
+  deleteAnswer,
+  updateAnswerOrder,
+}: Props) => {
   const [questionTitle, updateTitle] = useState<string>("");
   const [questionType, updateType] = useState<QuestionType | "">("");
   const [questionOrder, updateOrder] = useState<number>(0);
@@ -61,7 +72,37 @@ const AddQuestion = ({ SaveQuestion, questionToEdit, deleteAnswer }: Props) => {
   };
 
   const deleteSelectedAnswer = (n: number) => {
-    deleteAnswer(questionOrder, n);
+    if (questionToEdit !== null) {
+      deleteAnswer(questionOrder, n);
+    }
+    const selections = questionAnswer.filter((answer, i) => {
+      return i !== n;
+    });
+    updateAnswer([...selections]);
+  };
+
+  const moveQuestionUp = (n: number) => {
+    if (n === 0) return;
+    const currentAnswers = questionAnswer;
+    const answer = currentAnswers[n];
+    currentAnswers.splice(n, 1);
+    currentAnswers.splice(n - 1, 0, answer);
+    currentAnswers.map((answer, i) => {
+      answer.order = i;
+    }); // update order
+    updateAnswer([...currentAnswers]);
+  };
+
+  const moveQuestionDown = (n: number) => {
+    if (n === questionAnswer.length - 1) return;
+    const currentAnswers = questionAnswer;
+    const answer = currentAnswers[n];
+    currentAnswers.splice(n, 1);
+    currentAnswers.splice(n + 1, 0, answer);
+    currentAnswers.map((answer, i) => {
+      answer.order = i;
+    }); // update order
+    updateAnswer([...currentAnswers]);
   };
 
   return (
@@ -127,32 +168,15 @@ const AddQuestion = ({ SaveQuestion, questionToEdit, deleteAnswer }: Props) => {
         <div className=" w-full">
           {questionAnswer.map((answer, n) => {
             return (
-              <div key={answer.id} className="flex w-full justify-between">
-                <div className="w-1/3">{answer.title}</div>
-                <div>{answer.order}</div>
-                <div className="w-1/3 justify-around flex">
-                  <label htmlFor={`${answer.id}-${new Date().getTime()}`}>
-                    Correct Answer?
-                  </label>
-                  <input
-                    type="radio"
-                    name="singleChoice"
-                    checked={answer.correct}
-                    onChange={() => {
-                      updateSelectedAnswer(n);
-                    }}
-                    id={`${answer.id}`}
-                  />
-                  <div
-                    className="text-red-600 font-black cursor-pointer hover:blur-sm duration-100 ease-in-out"
-                    onClick={(e) => {
-                      deleteSelectedAnswer(n);
-                    }}
-                  >
-                    X
-                  </div>
-                </div>
-              </div>
+              <SingleAnswer
+                answer={answer}
+                orderNo={n}
+                questionAnswer={questionAnswer}
+                updateSelectedAnswer={updateSelectedAnswer}
+                deleteSelectedAnswer={deleteSelectedAnswer}
+                moveQuestionUp={moveQuestionUp}
+                moveQuestionDown={moveQuestionDown}
+              />
             );
           })}
         </div>

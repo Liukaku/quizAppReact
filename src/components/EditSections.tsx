@@ -70,6 +70,21 @@ const EditSections = ({
     updateQuiz({ ...currentQuestions });
   };
 
+  const updateAnswerOrder = (questionNum: number, answerNum: number) => {
+    const currentQuestions = quiz; // get current state
+    const answer = currentQuestions.Questions[questionNum].answer[answerNum]; // get answer
+    currentQuestions.Questions[questionNum].answer.splice(answerNum, 1); // remove answer
+    currentQuestions.Questions[questionNum].answer.splice(
+      answerNum - 1,
+      0,
+      answer
+    ); // add answer to new position
+    currentQuestions.Questions[questionNum].answer.map((answer, i) => {
+      answer.order = i;
+    }); // update order
+    updateQuiz({ ...currentQuestions }); // update state
+  };
+
   return (
     <div className="lg:w-5/12 w-8/12 mx-auto">
       <h1 className="text-center">{sectionTitle}</h1>
@@ -77,6 +92,7 @@ const EditSections = ({
         SaveQuestion={saveQuestion}
         questionToEdit={questionToEdit}
         deleteAnswer={deleteAnswer}
+        updateAnswerOrder={updateAnswerOrder}
       />
       <div>
         {sectionQuestions.map((question: Question, n) => {

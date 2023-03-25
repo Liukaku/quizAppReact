@@ -7,21 +7,21 @@ import { useEffect } from "react";
 import io from "socket.io-client";
 import Link from "next/link";
 
-const inter = Inter({ subsets: ["latin"] });
-const socket = io("http://localhost:8080", {
-  transports: ["websocket", "polling"],
-});
+// const inter = Inter({ subsets: ["latin"] });
+// const socket = io("http://localhost:8080", {
+//   transports: ["websocket", "polling"],
+// });
 
 export default function Home() {
   useEffect(() => {
-    socket.on("connect", () => {});
-    socket.on("msg", (props) => {
-      console.log(props);
-    });
+    // socket.on("connect", () => {});
+    // socket.on("msg", (props) => {
+    //   console.log(props);
+    // });
   }, []);
 
   const btnClick = () => {
-    socket.emit("submit", `${socket.id} button pressed`);
+    // socket.emit("submit", `${socket.id} button pressed`);
   };
 
   return (
