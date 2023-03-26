@@ -26,9 +26,10 @@ const NewSection = () => {
   const submitNewSection = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const currentSections = sections;
-    currentSections[Object.keys(currentSections).length.toString()] = {
+    currentSections[new Date().getTime().toString()] = {
       name: sectionTitle,
       background: sectionUrl,
+      order: Object.keys(currentSections).length,
     };
     updateSections(currentSections);
     const currentState = quiz;

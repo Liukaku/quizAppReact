@@ -30,7 +30,6 @@ const AddQuestion = ({
   const [questionAnswer, updateAnswer] = useState<Array<Answer>>([]);
 
   useEffect(() => {
-    console.log(questionToEdit);
     if (questionToEdit !== null) {
       updateTitle(questionToEdit.questionTitle);
       updateType(questionToEdit.type);

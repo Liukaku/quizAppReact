@@ -12,9 +12,12 @@ export type Sections = Record<string, SectionVal>;
 export type SectionVal = {
   name: string;
   background: string;
+  order: number;
 };
 
-export type Questions = Array<Question>;
+export type Questions = QuestionRecord;
+
+export type QuestionRecord = Record<string, Array<Question>>;
 
 export type QuestionType = "SINGLE-CHOICE" | "MULTI-CHOICE" | "ORDER";
 
