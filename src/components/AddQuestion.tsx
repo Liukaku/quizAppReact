@@ -29,6 +29,7 @@ const AddQuestion = ({
   const [questionOrder, updateOrder] = useState<number>(1);
   const [questionAnswer, updateAnswer] = useState<Array<Answer>>([]);
   const [modalContent, updateModalContent] = useState<JSX.Element | null>(null);
+  const [errorText, updateErrorText] = useState<string | null>(null);
 
   useEffect(() => {
     if (questionToEdit !== null) {
@@ -43,6 +44,13 @@ const AddQuestion = ({
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
+    const hasCorrectAnswer = questionAnswer.some((answer) => {
+      return answer.correct;
+    });
+    if (!hasCorrectAnswer) {
+      updateErrorText("Please select a correct answer");
+      return;
+    }
     if (questionTitle !== "" && questionType !== "") {
       const question: Question = {
         questionTitle: questionTitle,
@@ -247,6 +255,13 @@ const AddQuestion = ({
           })}
         </div>
       )}
+      <div className="w-full">
+        {errorText && (
+          <h1 className="text-red-500 font-extrabold text-2xl text-center">
+            {errorText}
+          </h1>
+        )}
+      </div>
       <button
         className="formButton"
         type="submit"

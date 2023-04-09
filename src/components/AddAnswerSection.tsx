@@ -30,7 +30,9 @@ const AddAnswerSection = ({ type, currentAnswers, updateAnswers }: Props) => {
       return <OrderType />;
 
     default:
-      return <div className=" w-full">Default</div>;
+      return (
+        <div className=" w-full text-center">Please select an answer type</div>
+      );
   }
 };
 
