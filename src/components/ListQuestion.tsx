@@ -4,9 +4,14 @@ import { Question } from "./types";
 type Props = {
   question: Question;
   editQuestionAnswers: Function;
+  deleteQuestion: Function;
 };
 
-const ListQuestion = ({ question, editQuestionAnswers }: Props) => {
+const ListQuestion = ({
+  question,
+  editQuestionAnswers,
+  deleteQuestion,
+}: Props) => {
   return (
     <div
       key={`${question.order}`}
@@ -28,12 +33,18 @@ const ListQuestion = ({ question, editQuestionAnswers }: Props) => {
         {question.order}
       </div>
       <div
-        className={`w-3/12 text-center cursor-pointer hover:bg-pink-500 ease-in-out duration-300`}
+        className={`w-1/12 text-center cursor-pointer hover:bg-pink-500 ease-in-out duration-300`}
         onClick={() => {
           editQuestionAnswers(question);
         }}
       >
         Edit
+      </div>
+      <div
+        className="w-2/12 text-center cursor-pointer hover:bg-red-400 ease-in-out duration-300"
+        onClick={() => deleteQuestion(question.order - 1)}
+      >
+        Delete
       </div>
     </div>
   );

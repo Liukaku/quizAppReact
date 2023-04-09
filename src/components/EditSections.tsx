@@ -70,12 +70,6 @@ const EditSections = ({
     updateQuestionToEdit(question);
   };
 
-  const deleteQuestion = (question: Question) => {
-    const currentQuestions = quiz;
-    currentQuestions.Questions[sectionKey].splice(question.order, 1);
-    updateQuiz({ ...currentQuestions });
-  };
-
   const deleteAnswer = (questionNum: number, answerNum: number) => {
     console.log(questionNum, answerNum);
     const currentQuestions = quiz;
@@ -112,6 +106,16 @@ const EditSections = ({
     updateQuiz({ ...currentQuestions }); // update state
   };
 
+  const deleteQuestionAndAnswers = (questionOrder: number) => {
+    const currentQuestions = quiz;
+    currentQuestions.Questions[sectionKey].splice(questionOrder, 1);
+    currentQuestions.Questions[sectionKey].map((question, i) => {
+      question.order = i;
+    });
+    updateQuiz({ ...currentQuestions });
+    updateQuestions([...currentQuestions.Questions[sectionKey]]);
+  };
+
   return (
     <div className="lg:w-5/12 w-8/12 mx-auto">
       <h1 className="text-center">{sectionTitle}</h1>
@@ -127,6 +131,7 @@ const EditSections = ({
             <ListQuestion
               question={question}
               editQuestionAnswers={editQuestionAnswers}
+              deleteQuestion={deleteQuestionAndAnswers}
             />
           );
         })}

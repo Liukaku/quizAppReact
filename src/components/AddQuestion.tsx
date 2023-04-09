@@ -26,7 +26,7 @@ const AddQuestion = ({
 }: Props) => {
   const [questionTitle, updateTitle] = useState<string>("");
   const [questionType, updateType] = useState<QuestionType | "">("");
-  const [questionOrder, updateOrder] = useState<number>(0);
+  const [questionOrder, updateOrder] = useState<number>(1);
   const [questionAnswer, updateAnswer] = useState<Array<Answer>>([]);
   const [modalContent, updateModalContent] = useState<JSX.Element | null>(null);
 
@@ -54,7 +54,7 @@ const AddQuestion = ({
       updateAnswer([]);
       updateTitle("");
       updateType("");
-      updateOrder(0);
+      updateOrder(1);
     }
   };
 
