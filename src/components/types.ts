@@ -19,7 +19,7 @@ export type Questions = QuestionRecord;
 
 export type QuestionRecord = Record<string, Array<Question>>;
 
-export type QuestionType = "SINGLE-CHOICE" | "MULTI-CHOICE" | "ORDER";
+export type QuestionType = "SINGLE_CHOICE" | "MULTI_CHOICE" | "ORDER";
 
 export type Question = {
   questionTitle: string;
@@ -33,6 +33,7 @@ export type Answer = {
   order: number;
   correct: boolean;
   id: string;
+  answerType: QuestionType;
 };
 
 export type EditMode = "SECTIONS" | "QUESTIONS";

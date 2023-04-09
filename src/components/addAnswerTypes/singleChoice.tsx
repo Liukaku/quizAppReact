@@ -25,11 +25,12 @@ const SingleChoice = ({ currentAnswers, sendAnswersToParent }: Props) => {
   const addOption = (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const currentAnswers = answers;
-    const answer = {
+    const answer: Answer = {
       title: answerTitle,
-      order: currentAnswers.length,
+      order: currentAnswers.length + 1,
       correct: correctSelectedRef.current?.checked ? true : false,
       id: `${answerTitle}-${new Date().getTime()}`,
+      answerType: "SINGLE_CHOICE",
     };
 
     if (answer.correct) {

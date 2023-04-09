@@ -12,9 +12,14 @@ type Props = {
 
 const AddAnswerSection = ({ type, currentAnswers, updateAnswers }: Props) => {
   switch (type) {
-    case "MULTI-CHOICE":
-      return <MultiChoice />;
-    case "SINGLE-CHOICE":
+    case "MULTI_CHOICE":
+      return (
+        <MultiChoice
+          currentAnswers={currentAnswers}
+          sendAnswersToParent={updateAnswers}
+        />
+      );
+    case "SINGLE_CHOICE":
       return (
         <SingleChoice
           currentAnswers={currentAnswers}

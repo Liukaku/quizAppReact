@@ -1,4 +1,4 @@
-import { Answer } from "@/components/types";
+import { Answer, QuestionType } from "@/components/types";
 import React from "react";
 
 type Props = {
@@ -6,12 +6,16 @@ type Props = {
   orderNo: number;
   questionAnswer: Array<Answer>;
   updateSelectedAnswer: UpdateSelectedAnswer;
-  deleteSelectedAnswer: UpdateSelectedAnswer;
-  moveQuestionUp: UpdateSelectedAnswer;
-  moveQuestionDown: UpdateSelectedAnswer;
+  deleteSelectedAnswer: DeleteOrMoveSelectedAnswer;
+  moveQuestionUp: DeleteOrMoveSelectedAnswer;
+  moveQuestionDown: DeleteOrMoveSelectedAnswer;
 };
 
 interface UpdateSelectedAnswer {
+  (orderNo: number, answerType: QuestionType): void;
+}
+
+interface DeleteOrMoveSelectedAnswer {
   (orderNo: number): void;
 }
 
@@ -24,6 +28,12 @@ const SingleAnswer = ({
   moveQuestionUp,
   moveQuestionDown,
 }: Props) => {
+  const answerSelectionType = {
+    SINGLE_CHOICE: "radio",
+    MULTI_CHOICE: "checkbox",
+    ORDER: "number",
+  };
+
   return (
     <div key={answer.id} className="flex w-full justify-between">
       <div className="w-4/12">{answer.title}</div>
@@ -33,11 +43,11 @@ const SingleAnswer = ({
           Correct Answer?
         </label>
         <input
-          type="radio"
+          type={answerSelectionType[answer.answerType]}
           name="singleChoice"
           checked={answer.correct}
           onChange={() => {
-            updateSelectedAnswer(orderNo);
+            updateSelectedAnswer(orderNo, answer.answerType);
           }}
           id={`${answer.id}`}
         />
