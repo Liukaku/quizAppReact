@@ -40,18 +40,43 @@ const AddQuestion = ({
     }
   }, [questionToEdit]);
 
+  useEffect(() => {
+    if (questionAnswer.length > 0) {
+      const hasCorrectAnswer = questionAnswer.some((answer) => {
+        return answer.correct;
+      });
+
+      if (hasCorrectAnswer) {
+        updateErrorText(null);
+      }
+    }
+  }, [questionAnswer]);
+
+  useEffect(() => {
+    const hasAnswerTitle = questionTitle !== "";
+    if (hasAnswerTitle) {
+      updateErrorText(null);
+    }
+  }, [questionTitle]);
+
   const updateQuestion = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
+    console.log("update question");
     const hasCorrectAnswer = questionAnswer.some((answer) => {
       return answer.correct;
     });
     if (!hasCorrectAnswer) {
+      console.log("no correct answer");
       updateErrorText("Please select a correct answer");
       return;
     }
-    if (questionTitle !== "" && questionType !== "") {
+    if (questionTitle == "") {
+      updateErrorText("Please enter a question title");
+      return;
+    }
+    if (questionType !== "") {
       const question: Question = {
         questionTitle: questionTitle,
         order: 0,
@@ -63,6 +88,7 @@ const AddQuestion = ({
       updateTitle("");
       updateType("");
       updateOrder(1);
+      updateErrorText(null);
     }
   };
 
