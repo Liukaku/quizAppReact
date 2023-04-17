@@ -136,7 +136,10 @@ const EditSections = ({
           );
         })}
       </div>
-      <button className="formButton bg-red-800" onClick={() => updateMode()}>
+      <button
+        className="shadowBox w-full mt-5 py-2 text-zinc-300 rounded-md"
+        onClick={() => updateMode()}
+      >
         Edit Sections
       </button>
     </div>

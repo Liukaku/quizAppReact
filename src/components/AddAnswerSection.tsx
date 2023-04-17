@@ -27,7 +27,12 @@ const AddAnswerSection = ({ type, currentAnswers, updateAnswers }: Props) => {
         />
       );
     case "ORDER":
-      return <OrderType />;
+      return (
+        <OrderType
+          currentAnswers={currentAnswers}
+          sendAnswersToParent={updateAnswers}
+        />
+      );
 
     default:
       return (

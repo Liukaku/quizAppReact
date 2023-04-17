@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Answer, Question, QuestionType } from "./types";
 import AddAnswerSection from "./AddAnswerSection";
+import ReorderAnswer from "./addAnswerTypes/listAnswers/ReorderAnswer";
 import SingleAnswer from "./addAnswerTypes/listAnswers/SingleAnswer";
 
 type Props = {
@@ -58,6 +59,12 @@ const AddQuestion = ({
       updateErrorText(null);
     }
   }, [questionTitle]);
+
+  const answerTypeExplanation: Record<string, string> = {
+    SINGLE_CHOICE: "Select one answer",
+    MULTI_CHOICE: "Select multiple answers",
+    ORDER: "Put the answers in the correct order",
+  };
 
   const updateQuestion = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -226,7 +233,7 @@ const AddQuestion = ({
             name="questionType"
             value={"Single Choice"}
             checked={questionType === "SINGLE_CHOICE"}
-            onClick={(e) => {
+            onChange={(e) => {
               updateQuestionType("SINGLE_CHOICE");
             }}
           ></input>
@@ -239,7 +246,7 @@ const AddQuestion = ({
             name="questionType"
             value={"Multiple Choice"}
             checked={questionType === "MULTI_CHOICE"}
-            onClick={(e) => {
+            onChange={(e) => {
               updateQuestionType("MULTI_CHOICE");
             }}
           ></input>
@@ -252,12 +259,15 @@ const AddQuestion = ({
             name="questionType"
             value={"Re-order"}
             checked={questionType === "ORDER"}
-            onClick={(e) => {
+            onChange={(e) => {
               updateQuestionType("ORDER");
             }}
           ></input>
           <label htmlFor="reorder">Re-Order</label>
         </div>
+      </div>
+      <div className="w-full text-center font-bold text-lg">
+        {answerTypeExplanation[questionType]}
       </div>
       <AddAnswerSection
         type={questionType}
@@ -267,17 +277,31 @@ const AddQuestion = ({
       {questionAnswer && (
         <div className=" w-full">
           {questionAnswer.map((answer, n) => {
-            return (
-              <SingleAnswer
-                answer={answer}
-                orderNo={n}
-                questionAnswer={questionAnswer}
-                updateSelectedAnswer={updateSelectedAnswer}
-                deleteSelectedAnswer={deleteSelectedAnswer}
-                moveQuestionUp={moveQuestionUp}
-                moveQuestionDown={moveQuestionDown}
-              />
-            );
+            if (answer.answerType === "ORDER") {
+              return (
+                <ReorderAnswer
+                  answer={answer}
+                  orderNo={n}
+                  questionAnswer={questionAnswer}
+                  updateSelectedAnswer={updateSelectedAnswer}
+                  deleteSelectedAnswer={deleteSelectedAnswer}
+                  moveQuestionUp={moveQuestionUp}
+                  moveQuestionDown={moveQuestionDown}
+                />
+              );
+            } else {
+              return (
+                <SingleAnswer
+                  answer={answer}
+                  orderNo={n}
+                  questionAnswer={questionAnswer}
+                  updateSelectedAnswer={updateSelectedAnswer}
+                  deleteSelectedAnswer={deleteSelectedAnswer}
+                  moveQuestionUp={moveQuestionUp}
+                  moveQuestionDown={moveQuestionDown}
+                />
+              );
+            }
           })}
         </div>
       )}
@@ -289,7 +313,7 @@ const AddQuestion = ({
         )}
       </div>
       <button
-        className="formButton"
+        className="shadowBox w-full mt-5 py-2"
         type="submit"
         onClick={(e) => updateQuestion(e)}
       >

@@ -11,7 +11,7 @@ const NewSection = () => {
   const [quiz, updateQuiz]: Array<Quiz & Dispatch<SetStateAction<Quiz>>> =
     useContext<any>(CTX);
 
-  const [sections, updateSections] = useState<Sections>({});
+  const [sections, updateSections] = useState<Sections>(quiz.Sections);
   const [sectionTitle, updateTitle] = useState("");
   const [sectionUrl, updateUrl] = useState("");
 
