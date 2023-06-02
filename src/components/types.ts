@@ -3,8 +3,15 @@ import React from "react";
 export const CTX = React.createContext<(Quiz & any) | null>(null);
 
 export type Quiz = {
+  owner: OwnerDetails;
   Sections: Sections;
   Questions: Questions;
+};
+
+export type OwnerDetails = {
+  id: number;
+  ownerName: string;
+  quizName: string;
 };
 
 export type Sections = Record<string, SectionVal>;
@@ -36,6 +43,6 @@ export type Answer = {
   answerType: QuestionType;
 };
 
-export type EditMode = "SECTIONS" | "QUESTIONS";
+export type EditMode = "SECTIONS" | "QUESTIONS" | "OWNER";
 
 export type SectionEdit = string | null;

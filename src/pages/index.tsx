@@ -2,7 +2,7 @@ import Head from "next/head";
 import Image from "next/image";
 import { Inter } from "@next/font/google";
 import styles from "@/styles/Home.module.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import io from "socket.io-client";
 import Link from "next/link";
@@ -13,7 +13,22 @@ import Link from "next/link";
 // });
 
 export default function Home() {
+  const [socket, setConnection] = useState<WebSocket>();
+
   useEffect(() => {
+    const socket = new WebSocket("ws://localhost:4001/ws");
+    socket.onopen = () => {
+      console.log("connected");
+      socket.send("hello");
+    };
+    setConnection(socket);
+    // socket.onmessage = (e) => {
+    //   console.log(e.data);
+    // };
+    // socket.onclose = () => {
+    //   console.log("disconnected");
+    // };
+
     // socket.on("connect", () => {});
     // socket.on("msg", (props) => {
     //   console.log(props);
@@ -22,6 +37,7 @@ export default function Home() {
 
   const btnClick = () => {
     // socket.emit("submit", `${socket.id} button pressed`);
+    socket?.send(`{hello: "world"}`);
   };
 
   return (
