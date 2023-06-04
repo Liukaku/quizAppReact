@@ -6,16 +6,14 @@ import { useEffect, useState } from "react";
 
 import io from "socket.io-client";
 import Link from "next/link";
+import Util from "@/components/util";
+import { ServerSideProps } from "@/components/types";
 
-// const inter = Inter({ subsets: ["latin"] });
-// const socket = io("http://localhost:8080", {
-//   transports: ["websocket", "polling"],
-// });
-
-export default function Home() {
+export default function Home(props: ServerSideProps) {
   const [socket, setConnection] = useState<WebSocket>();
 
   useEffect(() => {
+    console.log(props);
     const socket = new WebSocket("ws://localhost:4001/ws");
     socket.onopen = () => {
       console.log("connected");
@@ -61,4 +59,12 @@ export default function Home() {
       </main>
     </>
   );
+}
+
+export async function getServerSideProps() {
+  return {
+    props: {
+      base: Util.baseURL(),
+    },
+  };
 }

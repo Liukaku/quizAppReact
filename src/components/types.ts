@@ -43,6 +43,19 @@ export type Answer = {
   answerType: QuestionType;
 };
 
-export type EditMode = "SECTIONS" | "QUESTIONS" | "OWNER";
+export type EditMode = "SECTIONS" | "QUESTIONS" | "LOADING";
 
 export type SectionEdit = string | null;
+
+export interface ServerSideProps {
+  base: string;
+}
+
+export interface ApiRes {
+  message: string;
+  newId: number;
+  response: {
+    owner: string;
+    name: string;
+  };
+}

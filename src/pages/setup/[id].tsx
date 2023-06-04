@@ -7,11 +7,15 @@ import {
   SectionVal,
   CTX,
   Quiz,
+  ServerSideProps,
 } from "@/components/types";
+import Util from "@/components/util";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
-function QuizSetup() {
+function QuizSetup(props: ServerSideProps) {
+  const router = useRouter();
   const [quizState, updateQuiz] = useState<Quiz>({
     owner: {
       ownerName: "",
@@ -22,50 +26,34 @@ function QuizSetup() {
     Questions: {},
   });
 
-  useEffect(() => {
-    console.log(quizState);
-  }, [quizState]);
-  const [editMode, updateMode] = useState<EditMode>("OWNER");
+  const [editMode, updateMode] = useState<EditMode>("LOADING");
   const [sectionEdit, selectSection] = useState<SectionEdit>(null);
 
   const [questions, updateQuestions] = useState<Questions>({});
 
-  const createQuiz = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const ownerName = e.currentTarget.owner.value;
-    const quizName = e.currentTarget.quizName.value;
-    console.log(ownerName, quizName);
-    const quiz: Quiz = {
-      owner: {
-        ownerName,
-        quizName,
-        id: 0,
-      },
-      Sections: {},
-      Questions: {},
-    };
-
-    const submitQuiz = async () => {
-      const newQuiz = await fetch("http://localhost:4001/initQuiz", {
-        method: "POST",
-        body: JSON.stringify({
-          owner: ownerName,
-          name: quizName,
-        }),
-      });
-      const data = await newQuiz.json();
-      console.log(data);
-      return data;
-    };
-
-    submitQuiz()
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  useEffect(() => {
+    const getQuizSession = sessionStorage.getItem(`quiz-${router.query.id}`);
+    if (getQuizSession) {
+      const quiz = JSON.parse(getQuizSession);
+      updateQuiz(quiz);
+      updateMode("SECTIONS");
+    } else {
+      const getQuiz = async () => {
+        const goFetch = await fetch(
+          `${props.base}/getQuizId/${router.query.id}`
+        );
+        const res = await goFetch.json();
+        return res;
+      };
+      getQuiz()
+        .then((data: Quiz) => {
+          console.log(data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, []);
 
   const editSectionBtn = (sectionKey: string) => {
     updateMode("QUESTIONS");
@@ -82,30 +70,8 @@ function QuizSetup() {
 
   const renderSwitch = () => {
     switch (editMode) {
-      case "OWNER":
-        return (
-          <div className="md:w-3/12 w-7/12 mx-auto my-5">
-            <form onSubmit={(e) => createQuiz(e)}>
-              <label htmlFor="owner">Quiz Creator</label>
-              <input
-                type="text"
-                id="owner"
-                required
-                minLength={3}
-                className="bg-red-300 valid:bg-white valid:text-black w-full"
-              ></input>
-              <label htmlFor="quizName">Quiz Name</label>
-              <input
-                type="text"
-                id="quizName"
-                required
-                minLength={3}
-                className="bg-red-300 valid:bg-white valid:text-black w-full"
-              ></input>
-              <button type="submit">Submit</button>
-            </form>
-          </div>
-        );
+      case "LOADING":
+        return <div className="md:w-3/12 w-7/12 mx-auto my-5">Loading...</div>;
       case "SECTIONS":
         return (
           <div>
@@ -128,10 +94,7 @@ function QuizSetup() {
                     >
                       Update section
                       <br />
-                      <span
-                        className=" border-b-0 hover:border-b
-              "
-                      >
+                      <span className=" border-b-0 hover:border-b">
                         {quizState.Sections[sec].name}
                       </span>
                     </h1>
@@ -174,3 +137,11 @@ function QuizSetup() {
 }
 
 export default QuizSetup;
+
+export async function getServerSideProps() {
+  return {
+    props: {
+      base: Util.baseURL(),
+    },
+  };
+}

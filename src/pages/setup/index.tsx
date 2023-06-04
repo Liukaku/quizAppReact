@@ -7,22 +7,16 @@ import {
   SectionVal,
   CTX,
   Quiz,
+  ServerSideProps,
+  ApiRes,
 } from "@/components/types";
 import { redirect } from "next/navigation";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import Util from "@/components/util";
 
-interface ApiRes {
-  message: string;
-  newId: number;
-  response: {
-    owner: string;
-    name: string;
-  };
-}
-
-function QuizSetup() {
+function QuizSetup(props: ServerSideProps) {
   const router = useRouter();
   const [quizState, updateQuiz] = useState<Quiz>({
     owner: {
@@ -39,18 +33,9 @@ function QuizSetup() {
     const ownerName = e.currentTarget.owner.value;
     const quizName = e.currentTarget.quizName.value;
     console.log(ownerName, quizName);
-    const quiz: Quiz = {
-      owner: {
-        ownerName,
-        quizName,
-        id: 0,
-      },
-      Sections: {},
-      Questions: {},
-    };
 
     const submitQuiz = async () => {
-      const newQuiz = await fetch("http://localhost:4001/initQuiz", {
+      const newQuiz = await fetch(`${props.base}/initQuiz`, {
         method: "POST",
         body: JSON.stringify({
           owner: ownerName,
@@ -64,7 +49,19 @@ function QuizSetup() {
 
     submitQuiz()
       .then((data: ApiRes) => {
-        router.push(`/setup/${data.newId}`);
+        router.push({
+          pathname: `/setup/${data.newId}`,
+        });
+        const quiz: Quiz = {
+          owner: {
+            ownerName,
+            quizName,
+            id: data.newId,
+          },
+          Sections: {},
+          Questions: {},
+        };
+        sessionStorage.setItem(`quiz-${data.newId}`, JSON.stringify(quiz));
       })
       .catch((err) => {
         console.log(err);
@@ -105,3 +102,11 @@ function QuizSetup() {
 }
 
 export default QuizSetup;
+
+export async function getServerSideProps() {
+  return {
+    props: {
+      base: Util.baseURL(),
+    },
+  };
+}
