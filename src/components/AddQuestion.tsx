@@ -86,7 +86,7 @@ const AddQuestion = ({
     if (questionType !== "") {
       const question: Question = {
         questionTitle: questionTitle,
-        order: 0,
+        order: 1,
         type: questionType,
         answer: questionAnswer,
       };

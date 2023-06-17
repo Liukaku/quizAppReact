@@ -54,7 +54,7 @@ const EditSections = ({
     let currentSection = currentQuestions.Questions[sectionKey] ?? [];
     const newQuestion = question;
     if (questionToEdit == null) {
-      newQuestion.order = currentSection.length;
+      newQuestion.order = currentSection.length + 1;
       currentSection.push(newQuestion);
       currentQuestions.Questions[sectionKey] = currentSection;
     } else {

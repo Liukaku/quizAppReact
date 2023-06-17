@@ -43,11 +43,12 @@ function QuizSetup(props: ServerSideProps) {
           `${props.base}/getQuizId/${router.query.id}`
         );
         const res = await goFetch.json();
-        return res;
+        return res.message;
       };
       getQuiz()
         .then((data: Quiz) => {
-          console.log(data);
+          updateQuiz({ ...data });
+          updateMode("SECTIONS");
         })
         .catch((err) => {
           console.log(err);
