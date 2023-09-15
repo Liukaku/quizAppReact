@@ -30,7 +30,7 @@ const OrderType = ({ currentAnswers, sendAnswersToParent }: Props) => {
       order: currentAnswers.length + 1,
       correct: correctSelectedRef.current?.checked ? true : false,
       id: `${answerTitle}-${new Date().getTime()}`,
-      answerType: "SINGLE_CHOICE",
+      answerType: "ORDER",
     };
 
     if (answer.correct) {

@@ -32,7 +32,8 @@ function QuizSetup(props: ServerSideProps) {
   const [questions, updateQuestions] = useState<Questions>({});
 
   useEffect(() => {
-    const getQuizSession = sessionStorage.getItem(`quiz-${router.query.id}`);
+    // const getQuizSession = sessionStorage.getItem(`quiz-${router.query.id}`);
+    let getQuizSession;
     if (getQuizSession) {
       const quiz = JSON.parse(getQuizSession);
       updateQuiz(quiz);
@@ -47,6 +48,7 @@ function QuizSetup(props: ServerSideProps) {
       };
       getQuiz()
         .then((data: Quiz) => {
+          console.log(data);
           updateQuiz({ ...data });
           updateMode("SECTIONS");
         })

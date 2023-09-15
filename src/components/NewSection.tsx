@@ -20,6 +20,7 @@ const NewSection = () => {
     updateQuiz({
       Sections: { ...sections },
       Questions: currentState.Questions,
+      owner: currentState.owner,
     });
   }, [sections]);
 
@@ -36,9 +37,32 @@ const NewSection = () => {
     updateQuiz({
       Sections: { ...currentSections },
       Questions: currentState.Questions,
+      owner: currentState.owner,
     });
     updateTitle("");
     updateUrl("");
+
+    // post the new section to the database
+    fetch("http://localhost:4002/sectionEdit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: sectionTitle,
+        background: sectionUrl,
+        order: Object.keys(currentSections).length,
+        ownerId: quiz.owner,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+        updateSections(data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
   return (
     <div className="w-8/12 mx-auto">
