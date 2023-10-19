@@ -37,12 +37,12 @@ const AddQuestion = ({
       updateTitle(questionToEdit.questionTitle);
       updateType(questionToEdit.type);
       updateOrder(questionToEdit.order);
-      updateAnswer(questionToEdit.answer);
+      updateAnswer(questionToEdit.answer ?? []);
     }
   }, [questionToEdit]);
 
   useEffect(() => {
-    if (questionAnswer.length > 0) {
+    if (questionAnswer && questionAnswer.length > 0) {
       const hasCorrectAnswer = questionAnswer.some((answer) => {
         return answer.correct;
       });
@@ -98,6 +98,10 @@ const AddQuestion = ({
       updateErrorText(null);
     }
   };
+
+  // const postAnswer = (answer: Answer) => {
+  //   fetch("http://localhost:4002/answerEdit", {
+  // }
 
   const updateSelectedAnswer = (n: number, answerType: QuestionType) => {
     const selections = questionAnswer.map((answer, i) => {

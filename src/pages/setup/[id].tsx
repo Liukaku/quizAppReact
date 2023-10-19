@@ -12,7 +12,7 @@ import {
 import Util from "@/components/util";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 
 function QuizSetup(props: ServerSideProps) {
   const router = useRouter();
@@ -44,7 +44,7 @@ function QuizSetup(props: ServerSideProps) {
           `${props.base}/getQuizId/${router.query.id}`
         );
         const res = await goFetch.json();
-        return res.message;
+        return res;
       };
       getQuiz()
         .then((data: Quiz) => {
@@ -70,6 +70,10 @@ function QuizSetup(props: ServerSideProps) {
       updateMode("QUESTIONS");
     }
   };
+
+  useEffect(() => {
+    console.log(quizState);
+  }, [quizState]);
 
   const renderSwitch = () => {
     switch (editMode) {

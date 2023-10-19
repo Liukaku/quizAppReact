@@ -13,12 +13,16 @@ const SingleChoice = ({ currentAnswers, sendAnswersToParent }: Props) => {
   const [answerSelection, updateSelection] = useState(0);
 
   useEffect(() => {
-    sendAnswersToParent(answers);
+    if (currentAnswers !== answers) {
+      sendAnswersToParent(answers);
+    }
     return () => {};
   }, [answers]);
 
   useEffect(() => {
-    updateAnswers(currentAnswers);
+    if (currentAnswers !== answers) {
+      updateAnswers(currentAnswers);
+    }
     return () => {};
   }, [currentAnswers]);
 
