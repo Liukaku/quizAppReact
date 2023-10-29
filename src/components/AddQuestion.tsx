@@ -9,6 +9,7 @@ type Props = {
   questionToEdit: Question | null;
   deleteAnswer: DeleteAnswer;
   updateAnswerOrder: UpdateAnswerOrder;
+  sectionKey: string;
 };
 
 interface DeleteAnswer {
@@ -24,6 +25,7 @@ const AddQuestion = ({
   questionToEdit,
   deleteAnswer,
   updateAnswerOrder,
+  sectionKey,
 }: Props) => {
   const [questionTitle, updateTitle] = useState<string>("");
   const [questionType, updateType] = useState<QuestionType | "">("");
@@ -66,7 +68,25 @@ const AddQuestion = ({
     ORDER: "Put the answers in the correct order",
   };
 
-  const updateQuestion = (
+  async function postQuestion(question: Question) {
+    const response = await fetch(
+      `http://localhost:4002/answerEdit/${question.id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...question,
+          from_section_id: Number(sectionKey),
+        }),
+      }
+    );
+    const data = await response.json();
+    console.log(data);
+  }
+
+  const updateQuestion = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
@@ -89,7 +109,9 @@ const AddQuestion = ({
         order: 1,
         type: questionType,
         answer: questionAnswer,
+        id: questionToEdit?.id ?? "null",
       };
+      await postQuestion(question);
       SaveQuestion(question);
       updateAnswer([]);
       updateTitle("");

@@ -33,6 +33,7 @@ export type Question = {
   order: number;
   type: QuestionType;
   answer: Array<Answer>;
+  id: number | "null" | null;
 };
 
 export type Answer = {
