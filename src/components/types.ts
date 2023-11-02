@@ -40,7 +40,7 @@ export type Answer = {
   title: string;
   order: number;
   correct: boolean;
-  id: string;
+  id: number;
   answerType: QuestionType;
 };
 

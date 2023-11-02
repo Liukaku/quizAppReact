@@ -125,6 +125,7 @@ const EditSections = ({
         deleteAnswer={deleteAnswer}
         updateAnswerOrder={updateAnswerOrder}
         sectionKey={sectionKey}
+        questionsNum={sectionQuestions.length}
       />
       <div>
         {sectionQuestions.map((question: Question, n) => {

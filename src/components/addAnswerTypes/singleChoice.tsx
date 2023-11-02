@@ -33,7 +33,7 @@ const SingleChoice = ({ currentAnswers, sendAnswersToParent }: Props) => {
       title: answerTitle,
       order: currentAnswers.length + 1,
       correct: correctSelectedRef.current?.checked ? true : false,
-      id: `${answerTitle}-${new Date().getTime()}`,
+      id: new Date().getTime(),
       answerType: "SINGLE_CHOICE",
     };
 

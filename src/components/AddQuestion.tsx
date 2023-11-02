@@ -10,6 +10,7 @@ type Props = {
   deleteAnswer: DeleteAnswer;
   updateAnswerOrder: UpdateAnswerOrder;
   sectionKey: string;
+  questionsNum: number;
 };
 
 interface DeleteAnswer {
@@ -26,10 +27,13 @@ const AddQuestion = ({
   deleteAnswer,
   updateAnswerOrder,
   sectionKey,
+  questionsNum,
 }: Props) => {
   const [questionTitle, updateTitle] = useState<string>("");
   const [questionType, updateType] = useState<QuestionType | "">("");
-  const [questionOrder, updateOrder] = useState<number>(1);
+  const [questionOrder, updateOrder] = useState<number>(
+    questionsNum === 0 ? questionsNum + 1 : questionsNum
+  );
   const [questionAnswer, updateAnswer] = useState<Array<Answer>>([]);
   const [modalContent, updateModalContent] = useState<JSX.Element | null>(null);
   const [errorText, updateErrorText] = useState<string | null>(null);
@@ -84,6 +88,7 @@ const AddQuestion = ({
     );
     const data = await response.json();
     console.log(data);
+    return data.insertId as number;
   }
 
   const updateQuestion = async (
@@ -106,12 +111,13 @@ const AddQuestion = ({
     if (questionType !== "") {
       const question: Question = {
         questionTitle: questionTitle,
-        order: 1,
+        order: questionToEdit?.order ?? questionOrder,
         type: questionType,
         answer: questionAnswer,
         id: questionToEdit?.id ?? "null",
       };
-      await postQuestion(question);
+      const questionId = await postQuestion(question);
+      question.id = questionId;
       SaveQuestion(question);
       updateAnswer([]);
       updateTitle("");
